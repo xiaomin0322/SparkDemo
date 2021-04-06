@@ -1,4 +1,4 @@
-package com.hyr.sparkml.als;
+package com.huangyueran.spark.streaming;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,15 +23,15 @@ import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaPairInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka.KafkaUtils;
-
-import kafka.serializer.StringDecoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import kafka.serializer.StringDecoder;
 import scala.Tuple2;
 
 /**
  * @author huangyueran
- * @category 基于Spark-streaming、kafka的实时推荐模板DEMO 原系统中包含商城项目、logback、flume、hadoop
+ * @category 鍩轰簬Spark-streaming銆乲afka鐨勫疄鏃舵帹鑽愭ā鏉緿EMO 鍘熺郴缁熶腑鍖呭惈鍟嗗煄椤圭洰銆乴ogback銆乫lume銆乭adoop
  * The real time recommendation template DEMO based on Spark-streaming and Kafka contains the mall project, logback, flume and Hadoop in the original system
  */
 public final class SparkALSByStreaming {
@@ -45,10 +45,10 @@ public final class SparkALSByStreaming {
     private static final String MODEL_PATH = "/spark-als/model";
 
 
-    //	基于Hadoop、Flume、Kafka、spark-streaming、logback、商城系统的实时推荐系统DEMO
+    //	鍩轰簬Hadoop銆丗lume銆並afka銆乻park-streaming銆乴ogback銆佸晢鍩庣郴缁熺殑瀹炴椂鎺ㄨ崘绯荤粺DEMO
     //	Real time recommendation system DEMO based on Hadoop, Flume, Kafka, spark-streaming, logback and mall system
-    //	商城系统采集的数据集格式 Data Format:
-    //	用户ID，商品ID，用户行为评分，时间戳
+    //	鍟嗗煄绯荤粺閲囬泦鐨勬暟鎹泦鏍煎紡 Data Format:
+    //	鐢ㄦ埛ID锛屽晢鍝両D锛岀敤鎴疯涓鸿瘎鍒嗭紝鏃堕棿鎴�
     //	UserID,ItemId,Rating,TimeStamp
     //	53,1286513,9,1508221762
     //	53,1172348420,9,1508221762
@@ -58,16 +58,16 @@ public final class SparkALSByStreaming {
     //	53,1215837445,9,1508221762
 
     public static void main(String[] args) {
-        System.setProperty("HADOOP_USER_NAME", "root"); // 设置权限用户
+        System.setProperty("HADOOP_USER_NAME", "root"); // 璁剧疆鏉冮檺鐢ㄦ埛
 
         SparkConf sparkConf = new SparkConf().setAppName("JavaKafkaDirectWordCount").setMaster("local[1]");
 
         final JavaStreamingContext jssc = new JavaStreamingContext(sparkConf, Durations.seconds(6));
 
-        Map<String, String> kafkaParams = new HashMap<String, String>(); // key是topic名称,value是线程数量
-        kafkaParams.put("metadata.broker.list", KAFKA_ADDR); // 指定broker在哪
+        Map<String, String> kafkaParams = new HashMap<String, String>(); // key鏄痶opic鍚嶇О,value鏄嚎绋嬫暟閲�
+        kafkaParams.put("metadata.broker.list", KAFKA_ADDR); // 鎸囧畾broker鍦ㄥ摢
         HashSet<String> topicsSet = new HashSet<String>();
-        topicsSet.add(TOPIC); // 指定操作的topic
+        topicsSet.add(TOPIC); // 鎸囧畾鎿嶄綔鐨則opic
 
         // Create direct kafka stream with brokers and topics
         // createDirectStream()
@@ -88,14 +88,14 @@ public final class SparkALSByStreaming {
             }
         });
 
-        // 进行流推荐计算
+        // 杩涜娴佹帹鑽愯绠�
         ratingsStream.foreachRDD(new VoidFunction<JavaRDD<Rating>>() {
 
             public void call(JavaRDD<Rating> ratings) throws Exception {
-                //  获取到原始的数据集
+                //  鑾峰彇鍒板師濮嬬殑鏁版嵁闆�
                 SparkContext sc = ratings.context();
 
-                RDD<String> textFileRDD = sc.textFile(HDFS_ADDR + "/flume/logs", 3); // 读取原始数据集文件
+                RDD<String> textFileRDD = sc.textFile(HDFS_ADDR + "/flume/logs", 3); // 璇诲彇鍘熷鏁版嵁闆嗘枃浠�
                 JavaRDD<String> originalTextFile = textFileRDD.toJavaRDD();
 
                 final JavaRDD<Rating> originaldatas = originalTextFile.map(new Function<String, Rating>() {
@@ -106,37 +106,37 @@ public final class SparkALSByStreaming {
                     }
                 });
                 log.info("========================================");
-                log.info("Original TextFile Count:{}", originalTextFile.count()); // HDFS中已经存储的原始用户行为日志数据
+                log.info("Original TextFile Count:{}", originalTextFile.count()); // HDFS涓凡缁忓瓨鍌ㄧ殑鍘熷鐢ㄦ埛琛屼负鏃ュ織鏁版嵁
                 log.info("========================================");
 
-                //  将原始数据集和新的用户行为数据进行合并
+                //  灏嗗師濮嬫暟鎹泦鍜屾柊鐨勭敤鎴疯涓烘暟鎹繘琛屽悎骞�
                 JavaRDD<Rating> calculations = originaldatas.union(ratings);
 
                 log.info("Calc Count:{}", calculations.count());
 
                 // Build the recommendation model using ALS
-                int rank = 10; // 模型中隐语义因子的个数
-                int numIterations = 6; // 训练次数
+                int rank = 10; // 妯″瀷涓殣璇箟鍥犲瓙鐨勪釜鏁�
+                int numIterations = 6; // 璁粌娆℃暟
 
-                // 得到训练模型
-                if (!ratings.isEmpty()) { // 如果有用户行为数据
+                // 寰楀埌璁粌妯″瀷
+                if (!ratings.isEmpty()) { // 濡傛灉鏈夌敤鎴疯涓烘暟鎹�
                     MatrixFactorizationModel model = ALS.train(JavaRDD.toRDD(calculations), rank, numIterations, 0.01);
-                    //  判断文件是否存在,如果存在 删除文件目录
+                    //  鍒ゆ柇鏂囦欢鏄惁瀛樺湪,濡傛灉瀛樺湪 鍒犻櫎鏂囦欢鐩綍
                     Configuration hadoopConfiguration = sc.hadoopConfiguration();
                     hadoopConfiguration.set("fs.defaultFS", HDFS_ADDR);
                     FileSystem fs = FileSystem.get(hadoopConfiguration);
                     Path outpath = new Path(MODEL_PATH);
                     if (fs.exists(outpath)) {
-                        log.info("########### 删除" + outpath.getName() + " ###########");
+                        log.info("########### 鍒犻櫎" + outpath.getName() + " ###########");
                         fs.delete(outpath, true);
                     }
 
-                    // 保存model
+                    // 淇濆瓨model
                     model.save(sc, HDFS_ADDR + MODEL_PATH);
 
-                    //  读取model
+                    //  璇诲彇model
                     MatrixFactorizationModel modelLoad = MatrixFactorizationModel.load(sc, HDFS_ADDR + MODEL_PATH);
-                    // 为指定用户推荐10个商品(电影)
+                    // 涓烘寚瀹氱敤鎴锋帹鑽�10涓晢鍝�(鐢靛奖)
                     for(int userId=0;userId<30;userId++){ // streaming_sample_movielens_ratings.txt
                         Rating[] recommendProducts = modelLoad.recommendProducts(userId, 10);
                         log.info("get recommend result:{}", Arrays.toString(recommendProducts));
