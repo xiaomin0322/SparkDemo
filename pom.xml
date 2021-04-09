@@ -11,11 +11,11 @@
 
 	<dependencies>
 		<!-- scala-spark -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.scala-lang</groupId>
 			<artifactId>scala-library</artifactId>
 			<version>2.12.13</version>
-		</dependency>
+		</dependency> -->
 		<!-- https://mvnrepository.com/artifact/org.apache.spark/spark-core -->
 		<dependency>
 			<groupId>org.apache.spark</groupId>
@@ -48,7 +48,6 @@
 			<groupId>org.apache.spark</groupId>
 			<artifactId>spark-hive_2.12</artifactId>
 			<version>2.4.6</version>
-			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
