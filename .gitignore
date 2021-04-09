@@ -14,7 +14,7 @@ build
 .checkpoint*
 checkpoint*
 tmp
-core-site.xml
-hdfs-site.xml
-yarn-site.xml
-hive-site.xml
+#core-site.xml
+#hdfs-site.xml
+#yarn-site.xml
+#hive-site.xml

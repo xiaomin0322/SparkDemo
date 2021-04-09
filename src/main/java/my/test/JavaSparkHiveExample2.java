@@ -18,13 +18,7 @@ package my.test;
 
 // $example on:spark_hive$
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.apache.spark.api.java.function.MapFunction;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Encoders;
-import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 // $example off:spark_hive$
 
@@ -62,12 +56,16 @@ public class JavaSparkHiveExample2 {
 		// tables
 		String warehouseLocation = Constant.HDFS_FILE_PREX + "/user/zzm/hive-to-hdfs4/000000_0";
 		SparkSession spark = SparkSession.builder().appName("Java Spark Hive Example")
-				 .config(SparkUtils.getLocalSparkConf(SparkUtils.class))
-				//.config(SparkUtils.getRemoteSparkConf(SparkUtils.class))
+				.config(SparkUtils.getLocalSparkConf(SparkUtils.class))
+				// .config(SparkUtils.getRemoteSparkConf(SparkUtils.class))
 				.enableHiveSupport().getOrCreate();
 
 		// Aggregation queries are also supported.
-		spark.sql("SELECT * FROM `default`.`t25`").show();
+		// spark.sql("SELECT * FROM default.t25").show();
+		// spark.sql("SELECT * FROM t25 where stuid >100000").show();
+		System.out.println("--------------------------------------------------------------------");
+		spark.sql("SELECT count(*) FROM t25").show();
+		System.out.println("--------------------------------------------------------------------");
 		spark.stop();
 	}
 }
