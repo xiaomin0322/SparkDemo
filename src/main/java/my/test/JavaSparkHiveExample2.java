@@ -62,7 +62,7 @@ public class JavaSparkHiveExample2 {
 
 		// Aggregation queries are also supported.
 		// spark.sql("SELECT * FROM default.t25").show();
-		 spark.sql("SELECT * FROM t25 where stuid >100000").show();
+		 spark.sql("SELECT count(1) FROM t22 where stuid <100000").show();
 		System.out.println("--------------------------------------------------------------------");
 		//spark.sql("SELECT count(*) FROM t25").show();
 		System.out.println("--------------------------------------------------------------------");
