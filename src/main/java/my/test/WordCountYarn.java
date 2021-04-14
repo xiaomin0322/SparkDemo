@@ -27,7 +27,9 @@ public class WordCountYarn {
 		System.setProperty("HADOOP_USER_NAME", "hadoop");
 		System.setProperty("user.name", "hadoop");
 
-		SparkConf conf = new SparkConf().setAppName("WordCountYarn").setMaster("yarn-client")
+		SparkConf conf = new SparkConf().setAppName("WordCountYarn")
+				.setMaster("yarn-client")
+				//.setMaster("yarn-cluster")
 				.set("spark.yarn.dist.files", "C:\\eclipse-workspace\\SparkDemo\\src\\main\\resources\\yarn-site.xml")
 				// .set("spark.yarn.jars", Constant.HDFS_FILE_PREX +"/user/zzm/spark-lib/*")
 				.set("spark.yarn.archive", Constant.HDFS_FILE_PREX + "/user/zzm/spark-lib")
