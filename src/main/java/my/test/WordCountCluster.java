@@ -14,7 +14,6 @@ import org.apache.spark.api.java.function.PairFunction;
 import org.apache.spark.api.java.function.VoidFunction;
 
 import com.huangyueran.spark.utils.Constant;
-import com.huangyueran.spark.utils.SparkUtils;
 
 import scala.Tuple2;
 
@@ -22,28 +21,12 @@ import scala.Tuple2;
  * @author huangyueran
  * @time 2019-7-21 16:38:20
  */
-public class WordCountYarn {
+public class WordCountCluster {
 	public static void main(String[] args) {
-		System.setProperty("HADOOP_USER_NAME", "hadoop");
-		System.setProperty("user.name", "hadoop");
-
-		SparkConf conf = new SparkConf().setAppName("WordCountYarn")
-				.setMaster("yarn-client")
-				//.setMaster("yarn-cluster")
-				.set("spark.yarn.dist.files", "C:\\eclipse-workspace\\SparkDemo\\src\\main\\resources\\yarn-site.xml")
-				// .set("spark.yarn.jars", Constant.HDFS_FILE_PREX +"/user/zzm/spark-lib/*")
-				.set("spark.yarn.archive", Constant.HDFS_FILE_PREX + "/user/zzm/spark-lib")
-				.set("spark.driver.host", "10.8.0.2")
-
-		// .set("spark.yarn.jar",
-		// "hdfs://192.168.0.1:9000/user/bigdatagfts/spark-assembly-1.5.2-hadoop2.6.0.jar")
-		;
-		JavaSparkContext sc = new JavaSparkContext(conf);
-		// JavaSparkContext sc = SparkUtils.getRemoteSparkContext(WordCount.class);
-
-		// sc.addJar("C:\\eclipse-workspace\\SparkDemo\\target\\SparkDemo-1.0-SNAPSHOT.jar");
-
-		JavaRDD<String> text = sc.textFile(Constant.HDFS_FILE_PREX + "/user/zzm/hive-to-hdfs4/000000_0");
+		JavaSparkContext sc = new JavaSparkContext(new SparkConf().setAppName(WordCountCluster.class.getName()));
+		//JavaSparkContext sc = SparkUtils.getRemoteSparkContext(WordCount.class);
+		
+		JavaRDD<String> text = sc.textFile(Constant.HDFS_FILE_PREX +"/user/zzm/hive-to-hdfs4/000000_0");
 		JavaRDD<String> words = text.flatMap(new FlatMapFunction<String, String>() {
 			private static final long serialVersionUID = 1L;
 
