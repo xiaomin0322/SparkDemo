@@ -11,7 +11,7 @@ import org.apache.spark.api.java.JavaSparkContext;
 public class SparkUtils {
 
     public static JavaSparkContext getRemoteSparkContext(Class clazz) {
-        System.setProperty("HADOOP_USER_NAME", "root");
+        System.setProperty("HADOOP_USER_NAME", "hadoop");
         /**
          * SparkConf:第一步创建一个SparkConf，在这个对象里面可以设置允许模式Local Standalone yarn
          * AppName(可以在Web UI中看到) 还可以设置Spark运行时的资源要求
@@ -26,7 +26,7 @@ public class SparkUtils {
     }
 
     public static JavaSparkContext getLocalSparkContext(Class clazz) {
-        System.setProperty("HADOOP_USER_NAME", "root");
+        System.setProperty("HADOOP_USER_NAME", "hadoop");
         /**
          * SparkConf:第一步创建一个SparkConf，在这个对象里面可以设置允许模式Local Standalone yarn
          * AppName(可以在Web UI中看到) 还可以设置Spark运行时的资源要求
@@ -48,7 +48,7 @@ public class SparkUtils {
     }
 
     public static SparkConf getLocalSparkConf(Class clazz) {
-        return new SparkConf().setAppName(clazz.getName()).setMaster("local");
+        return new SparkConf().setAppName(clazz.getName()).setMaster("local").set("spark.driver.host", "10.8.0.2");
     }
 
 

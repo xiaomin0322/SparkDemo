@@ -109,6 +109,19 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.7.12</version>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.hadoop.gplcompression/hadoop-lzo -->
+		<!-- https://mvnrepository.com/artifact/com.hadoop.gplcompression/hadoop-lzo -->
+		<dependency>
+			<groupId>com.hadoop.gplcompression</groupId>
+			<artifactId>hadoop-lzo</artifactId>
+			<version>0.4.15-gplextras5.0.0</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/hadoop-lzo-0.4.20.jar</systemPath>
+		</dependency>
+
+
+
 	</dependencies>
 
 	<build>

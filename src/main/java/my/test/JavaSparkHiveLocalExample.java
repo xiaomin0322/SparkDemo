@@ -32,55 +32,52 @@ import com.huangyueran.spark.utils.SparkUtils;
 
 public class JavaSparkHiveLocalExample {
 
-  // $example on:spark_hive$
-  public static class Record implements Serializable {
-    private int key;
-    private String value;
+	// $example on:spark_hive$
+	public static class Record implements Serializable {
+		private int key;
+		private String value;
 
-    public int getKey() {
-      return key;
-    }
+		public int getKey() {
+			return key;
+		}
 
-    public void setKey(int key) {
-      this.key = key;
-    }
+		public void setKey(int key) {
+			this.key = key;
+		}
 
-    public String getValue() {
-      return value;
-    }
+		public String getValue() {
+			return value;
+		}
 
-    public void setValue(String value) {
-      this.value = value;
-    }
-  }
-  // $example off:spark_hive$
+		public void setValue(String value) {
+			this.value = value;
+		}
+	}
+	// $example off:spark_hive$
 
-  public static void main(String[] args) {
-    // $example on:spark_hive$
-    // warehouseLocation points to the default location for managed databases and tables
-    String warehouseLocation = "spark-warehouse";
-    SparkSession spark = SparkSession
-      .builder()
-      .appName("Java Spark Hive Example")
-      //.config("spark.sql.warehouse.dir", warehouseLocation)
-      .config(SparkUtils.getLocalSparkConf(SparkUtils.class))
-      .enableHiveSupport()
-      .getOrCreate();
+	public static void main(String[] args) {
+		System.setProperty("HADOOP_USER_NAME", "hadoop");
+		System.setProperty("user.name", "hadoop");
+		// $example on:spark_hive$
+		// warehouseLocation points to the default location for managed databases and
+		// tables
+		SparkSession spark = SparkSession.builder().appName("Java Spark Hive Example")
+				// .config("spark.sql.warehouse.dir", warehouseLocation)
+				.config(SparkUtils.getLocalSparkConf(SparkUtils.class)).enableHiveSupport().getOrCreate();
 
-    spark.sql("CREATE TABLE IF NOT EXISTS src (key INT, value STRING)");
-    spark.sql("LOAD DATA LOCAL INPATH 'data/resources/kv1.txt' INTO TABLE src");
+		spark.sql("CREATE TABLE IF NOT EXISTS src (key INT, value STRING)");
+		spark.sql("LOAD DATA LOCAL INPATH 'data/resources/kv1.txt' INTO TABLE src");
 
-    // Queries are expressed in HiveQL
-    spark.sql("SELECT * FROM src").show();
-    // +---+-------+
-    // |key|  value|
-    // +---+-------+
-    // |238|val_238|
-    // | 86| val_86|
-    // |311|val_311|
-    // ...
+		// Queries are expressed in HiveQL
+		spark.sql("SELECT * FROM src").show();
+		// +---+-------+
+		// |key| value|
+		// +---+-------+
+		// |238|val_238|
+		// | 86| val_86|
+		// |311|val_311|
+		// ...
 
-
-    spark.stop();
-  }
+		spark.stop();
+	}
 }

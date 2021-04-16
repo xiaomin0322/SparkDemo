@@ -25,7 +25,7 @@ public static void main(String[] args) throws IOException {
 	String path = "C:\\eclipse-workspace\\SparkDemo\\target\\SparkDemo-1.0-SNAPSHOT.jar";
 	path = Constant.HDFS_FILE_PREX +"/user/zzm/SparkDemo-1.0-SNAPSHOT.jar";
 		String [] arg0=new String[]{
-		// "--jars",Constant.HDFS_FILE_PREX +"/user/zzm/spark-lib",		
+		 "--jars",Constant.HDFS_FILE_PREX +"/user/zzm/spark-lib",		
 		"--master","yarn",//ip端口
 		"--deploy-mode","cluster",
 		 "--name",appName,
