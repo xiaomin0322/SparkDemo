@@ -23,14 +23,14 @@ public static void main(String[] args) throws IOException {
 	String appName = "wordCount-yarn-cluster";
 	String className = "my.test.WordCountCluster";
 	String path = "C:\\eclipse-workspace\\SparkDemo\\target\\SparkDemo-1.0-SNAPSHOT.jar";
-	path = Constant.HDFS_FILE_PREX +"/user/zzm/SparkDemo-1.0-SNAPSHOT.jar";
+	//path = Constant.HDFS_FILE_PREX +"/user/zzm/SparkDemo-1.0-SNAPSHOT.jar";
 		String [] arg0=new String[]{
-		 "--jars",Constant.HDFS_FILE_PREX +"/user/zzm/spark-lib",		
 		"--master","yarn",//ip端口
 		"--deploy-mode","cluster",
 		 "--name",appName,
 		 "--class",className,//运行主类main
 		 //"--spark.yarn.archive",Constant.HDFS_FILE_PREX + "/user/zzm/spark-lib",
+		 "--jars",Constant.HDFS_FILE_PREX +"/user/zzm/spark-lib",
 		 "--executor-memory","2G",
 		 "--total-executor-cores","10",
 		 "--executor-cores","2",
